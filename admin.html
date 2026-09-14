@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | LankaExplore</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.admin-page{
+    min-height:100vh;
+    padding:140px 7% 80px;
+}
+.admin-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:35px;
+}
+.admin-kicker{
+    color:#ff7a00;
+    letter-spacing:3px;
+    font-size:12px;
+}
+.admin-head h1{
+    font-size:46px;
+}
+.admin-stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+.admin-stat{
+    padding:28px;
+    background:#151515;
+    border:1px solid #292929;
+    border-radius:20px;
+}
+.admin-stat strong{
+    display:block;
+    font-size:34px;
+    color:#ff7a00;
+}
+.admin-stat span{
+    color:#999;
+    font-size:13px;
+}
+.admin-panel{
+    padding:30px;
+    margin-bottom:25px;
+    background:#111;
+    border:1px solid #292929;
+    border-radius:24px;
+}
+.admin-panel h2{
+    margin-bottom:20px;
+}
+.table-wrap{
+    overflow-x:auto;
+}
+.admin-table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+.admin-table th,
+.admin-table td{
+    padding:15px 12px;
+    border-bottom:1px solid #262626;
+    text-align:left;
+    font-size:13px;
+}
+.admin-table th{
+    color:#ff9d42;
+}
+.admin-table td{
+    color:#bbb;
+}
+.status{
+    display:inline-block;
+    padding:5px 10px;
+    border-radius:20px;
+    background:rgba(255,122,0,.12);
+    color:#ff9d42;
+    font-size:11px;
+}
+.delete-btn{
+    border:1px solid #633;
+    background:transparent;
+    color:#ff8b8b;
+    padding:7px 12px;
+    border-radius:8px;
+    cursor:pointer;
+}
+.delete-btn:hover{
+    background:#3a1111;
+}
+.empty-admin{
+    color:#888;
+    padding:25px 0;
+}
+.destination-admin-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+.destination-admin-card{
+    padding:20px;
+    background:#151515;
+    border:1px solid #292929;
+    border-radius:18px;
+}
+.destination-admin-card strong{
+    color:white;
+}
+.destination-admin-card p{
+    color:#888;
+    font-size:12px;
+    margin-top:5px;
+}
+.search-admin{
+    width:100%;
+    max-width:400px;
+    padding:13px 16px;
+    margin-bottom:18px;
+    background:#0b0b0b;
+    color:white;
+    border:1px solid #333;
+    border-radius:10px;
+    outline:none;
+}
+.search-admin:focus{
+    border-color:#ff7a00;
+}
+@media(max-width:1000px){
+    .admin-stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .destination-admin-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+@media(max-width:650px){
+    .admin-page{
+        padding:120px 5% 60px;
+    }
+    .admin-head{
+        align-items:flex-start;
+        flex-direction:column;
+    }
+    .admin-head h1{
+        font-size:35px;
+    }
+    .admin-stats{
+        grid-template-columns:1fr;
+    }
+    .destination-admin-grid{
+        grid-template-columns:1fr;
+    }
+    .admin-panel{
+        padding:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+        Lanka<span>Explore</span>
+    </div>
+
+    <nav id="navMenu">
+        <a href="index.html">Website</a>
+        <a href="destination.html">Destinations</a>
+        <a href="#bookings">Bookings</a>
+        <a href="#users">Users</a>
+    </nav>
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+</header>
+
+
+<main class="admin-page">
+
+    <div class="admin-head">
+
+        <div>
+            <p class="admin-kicker">CONTROL CENTER</p>
+            <h1>Admin Dashboard</h1>
+        </div>
+
+        <button
+            class="secondary-btn"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+
+    <!-- DASHBOARD STATS -->
+
+    <section class="admin-stats">
+
+        <div class="admin-stat">
+            <strong id="bookingCount">0</strong>
+            <span>Total Bookings</span>
+        </div>
+
+        <div class="admin-stat">
+            <strong id="userCount">0</strong>
+            <span>Registered Users</span>
+        </div>
+
+        <div class="admin-stat">
+            <strong>8</strong>
+            <span>Destinations</span>
+        </div>
+
+        <div class="admin-stat">
+            <strong id="pendingCount">0</strong>
+            <span>Pending Requests</span>
+        </div>
+
+    </section>
+
+
+    <!-- BOOKINGS -->
+
+    <section
+        id="bookings"
+        class="admin-panel"
+    >
+
+        <h2>Booking Requests</h2>
+
+        <input
+            id="bookingSearch"
+            class="search-admin"
+            type="text"
+            placeholder="Search bookings..."
+            oninput="renderBookings()"
+        >
+
+        <div
+            id="bookingList"
+            class="table-wrap"
+        ></div>
+
+    </section>
+
+
+    <!-- USERS -->
+
+    <section
+        id="users"
+        class="admin-panel"
+    >
+
+        <h2>Registered Users</h2>
+
+        <div
+            id="userList"
+            class="table-wrap"
+        ></div>
+
+    </section>
+
+
+    <!-- DESTINATIONS -->
+
+    <section class="admin-panel">
+
+        <h2>Destinations</h2>
+
+        <div class="destination-admin-grid">
+
+            <div class="destination-admin-card">
+                <strong>Sigiriya</strong>
+                <p>Central Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Kandy</strong>
+                <p>Central Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Nuwara Eliya</strong>
+                <p>Central Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Ella</strong>
+                <p>Uva Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Yala</strong>
+                <p>Southern Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Galle</strong>
+                <p>Southern Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Mirissa</strong>
+                <p>Southern Province</p>
+            </div>
+
+            <div class="destination-admin-card">
+                <strong>Colombo</strong>
+                <p>Western Province</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- MESSAGES -->
+
+    <section class="admin-panel">
+
+        <h2>Messages</h2>
+
+        <div class="empty-admin">
+            Contact messages can be connected here when a backend is added.
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="script.js"></script>
+
+<script>
+/* ================= AUTH GUARD ================= */
+
+const currentUser = JSON.parse(
+    localStorage.getItem("lankaUser") || "null"
+);
+
+if (
+    !currentUser ||
+    currentUser.role !== "admin"
+) {
+    window.location.href = "login.html";
+}
+
+
+/* ================= HELPERS ================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* ================= BOOKINGS ================= */
+
+function getBookings() {
+
+    return JSON.parse(
+        localStorage.getItem("lankaBookings") || "[]"
+    );
+
+}
+
+
+function renderBookings() {
+
+    const bookings = getBookings();
+
+    const search =
+        (
+            document.getElementById(
+                "bookingSearch"
+            )?.value || ""
+        )
+        .toLowerCase()
+        .trim();
+
+    const filtered = bookings.filter(
+        booking => {
+
+            const text = [
+                booking.place,
+                booking.name,
+                booking.email,
+                booking.date,
+                booking.status
+            ]
+            .join(" ")
+            .toLowerCase();
+
+            return text.includes(search);
+
+        }
+    );
+
+
+    document.getElementById(
+        "bookingCount"
+    ).textContent = bookings.length;
+
+
+    document.getElementById(
+        "pendingCount"
+    ).textContent =
+        bookings.filter(
+            item =>
+                (item.status || "Pending")
+                    .toLowerCase() === "pending"
+        ).length;
+
+
+    const box =
+        document.getElementById(
+            "bookingList"
+        );
+
+
+    if (!filtered.length) {
+
+        box.innerHTML =
+            '<div class="empty-admin">' +
+            'No booking requests found.' +
+            '</div>';
+
+        return;
+    }
+
+
+    box.innerHTML = `
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Destination</th>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Date</th>
+                    <th>Travelers</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                ${filtered.map(
+                    booking => `
+
+                    <tr>
+
+                        <td>
+                            ${escapeHTML(booking.place)}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(booking.name)}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(booking.email)}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(booking.date)}
+                        </td>
+
+                        <td>
+                            ${escapeHTML(booking.travelers)}
+                        </td>
+
+                        <td>
+                            <span class="status">
+                                ${escapeHTML(
+                                    booking.status || "Pending"
+                                )}
+                            </span>
+                        </td>
+
+                        <td>
+                            <button
+                                class="delete-btn"
+                                onclick="deleteBooking(${booking.id})"
+                            >
+                                Delete
+                            </button>
+                        </td>
+
+                    </tr>
+
+                `
+                ).join("")}
+
+            </tbody>
+        </table>
+    `;
+
+}
+
+
+function deleteBooking(id) {
+
+    if (!confirm(
+        "Delete this booking request?"
+    )) {
+        return;
+    }
+
+    const bookings =
+        getBookings().filter(
+            booking =>
+                Number(booking.id) !== Number(id)
+        );
+
+    localStorage.setItem(
+        "lankaBookings",
+        JSON.stringify(bookings)
+    );
+
+    renderBookings();
+
+}
+
+
+/* ================= USERS ================= */
+
+function getUsers() {
+
+    return JSON.parse(
+        localStorage.getItem("lankaUsers") || "[]"
+    );
+
+}
+
+
+function renderUsers() {
+
+    const users = getUsers();
+
+    document.getElementById(
+        "userCount"
+    ).textContent = users.length;
+
+
+    const box =
+        document.getElementById(
+            "userList"
+        );
+
+
+    if (!users.length) {
+
+        box.innerHTML =
+            '<div class="empty-admin">' +
+            'No registered users yet.' +
+            '</div>';
+
+        return;
+    }
+
+
+    box.innerHTML = `
+        <table class="admin-table">
+
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Registered</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                ${users
+                    .slice()
+                    .reverse()
+                    .map(
+                        user => `
+
+                        <tr>
+
+                            <td>
+                                ${escapeHTML(
+                                    user.name || "Traveler"
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    user.email
+                                )}
+                            </td>
+
+                            <td>
+                                ${escapeHTML(
+                                    user.role
+                                )}
+                            </td>
+
+                            <td>
+                                ${
+                                    user.createdAt
+                                    ? new Date(
+                                        user.createdAt
+                                      ).toLocaleDateString()
+                                    : "-"
+                                }
+                            </td>
+
+                        </tr>
+
+                    `
+                    )
+                    .join("")}
+
+            </tbody>
+
+        </table>
+    `;
+
+}
+
+
+/* ================= LOGOUT ================= */
+
+function logout() {
+
+    localStorage.removeItem(
+        "lankaUser"
+    );
+
+    window.location.href =
+        "index.html";
+
+}
+
+
+/* ================= START ================= */
+
+renderBookings();
+renderUsers();
+</script>
+
+</body>
+</html>

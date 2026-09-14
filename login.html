@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login | LankaExplore</title>
+<link rel="stylesheet" href="style.css">
+
+<style>
+.auth-page{
+    min-height:100vh;
+    display:grid;
+    place-items:center;
+    padding:130px 20px 60px;
+    background:
+        radial-gradient(circle at 50% 20%,rgba(255,122,0,.16),transparent 45%);
+}
+.auth-box{
+    width:min(460px,100%);
+    padding:42px;
+    background:rgba(18,18,18,.92);
+    border:1px solid rgba(255,122,0,.3);
+    border-radius:28px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+    backdrop-filter:blur(20px);
+}
+.auth-box h1{
+    font-size:42px;
+    margin:5px 0;
+}
+.auth-kicker{
+    color:#ff7a00;
+    letter-spacing:3px;
+    font-weight:700;
+    font-size:12px;
+}
+.auth-sub,.demo-note{
+    color:#999;
+    line-height:1.7;
+}
+.auth-box form{
+    display:grid;
+    gap:14px;
+    margin:25px 0 15px;
+}
+.auth-box input{
+    width:100%;
+    padding:16px;
+    border:1px solid #333;
+    border-radius:12px;
+    background:#0b0b0b;
+    color:white;
+    outline:none;
+    font-family:inherit;
+}
+.auth-box input:focus{
+    border-color:#ff7a00;
+}
+.password-wrap{
+    position:relative;
+}
+.password-wrap input{
+    padding-right:80px;
+}
+.show-password{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    border:0;
+    background:none;
+    color:#aaa;
+    cursor:pointer;
+}
+.login-message{
+    min-height:25px;
+    color:#ff9d42;
+}
+.back-home{
+    color:#aaa;
+    text-decoration:none;
+}
+.back-home:hover{
+    color:#ff7a00;
+}
+.remember-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:#999;
+    font-size:12px;
+}
+.remember-row input{
+    width:auto;
+}
+.demo-box{
+    margin-top:18px;
+    padding:14px;
+    border-radius:12px;
+    background:#0c0c0c;
+    border:1px solid #252525;
+    font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="logo">Lanka<span>Explore</span></div>
+
+    <nav id="navMenu">
+        <a href="index.html#home">Home</a>
+        <a href="index.html#destinations">Destinations</a>
+        <a href="index.html#tours">Tours</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+</header>
+
+<main class="auth-page">
+
+    <div class="auth-box">
+
+        <p class="auth-kicker">LANKAEXPLORE</p>
+
+        <h1>Welcome Back</h1>
+
+        <p class="auth-sub">
+            Login to continue your Sri Lanka travel journey.
+        </p>
+
+        <form id="loginForm">
+
+            <input
+                id="loginEmail"
+                type="email"
+                placeholder="Email Address"
+                autocomplete="email"
+                required
+            >
+
+            <div class="password-wrap">
+
+                <input
+                    id="loginPassword"
+                    type="password"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <button
+                    type="button"
+                    class="show-password"
+                    onclick="togglePassword()"
+                >
+                    Show
+                </button>
+
+            </div>
+
+            <label class="remember-row">
+                <input type="checkbox" id="rememberEmail">
+                Remember email
+            </label>
+
+            <button class="primary-btn" type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <p id="loginMessage" class="login-message"></p>
+
+        <div class="demo-box">
+            <p class="demo-note">
+                <strong>Admin Demo Login</strong><br>
+                Email: admin@lankaexplore.lk<br>
+                Password: admin123
+            </p>
+        </div>
+
+        <br>
+
+        <a href="index.html" class="back-home">
+            ← Back to website
+        </a>
+
+    </div>
+
+</main>
+
+<script src="script.js"></script>
+
+<script>
+function togglePassword() {
+
+    const password =
+        document.getElementById("loginPassword");
+
+    const button =
+        document.querySelector(".show-password");
+
+    if (password.type === "password") {
+        password.type = "text";
+        button.textContent = "Hide";
+    } else {
+        password.type = "password";
+        button.textContent = "Show";
+    }
+}
+
+
+function saveUser(user) {
+
+    localStorage.setItem(
+        "lankaUser",
+        JSON.stringify(user)
+    );
+
+    const users = JSON.parse(
+        localStorage.getItem("lankaUsers") || "[]"
+    );
+
+    const existingIndex =
+        users.findIndex(
+            item => item.email === user.email
+        );
+
+    if (existingIndex === -1) {
+        users.push(user);
+    } else {
+        users[existingIndex] = {
+            ...users[existingIndex],
+            ...user
+        };
+    }
+
+    localStorage.setItem(
+        "lankaUsers",
+        JSON.stringify(users)
+    );
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const remembered =
+            localStorage.getItem(
+                "lankaRememberEmail"
+            );
+
+        if (remembered) {
+            document.getElementById(
+                "loginEmail"
+            ).value = remembered;
+
+            document.getElementById(
+                "rememberEmail"
+            ).checked = true;
+        }
+
+    }
+);
+
+
+document.getElementById(
+    "loginForm"
+).addEventListener(
+    "submit",
+    function (event) {
+
+        event.preventDefault();
+
+        const email =
+            document.getElementById(
+                "loginEmail"
+            ).value.trim().toLowerCase();
+
+        const password =
+            document.getElementById(
+                "loginPassword"
+            ).value;
+
+        const message =
+            document.getElementById(
+                "loginMessage"
+            );
+
+        const remember =
+            document.getElementById(
+                "rememberEmail"
+            ).checked;
+
+
+        if (remember) {
+
+            localStorage.setItem(
+                "lankaRememberEmail",
+                email
+            );
+
+        } else {
+
+            localStorage.removeItem(
+                "lankaRememberEmail"
+            );
+
+        }
+
+
+        /* ADMIN LOGIN */
+
+        if (
+            email === "admin@lankaexplore.lk" &&
+            password === "admin123"
+        ) {
+
+            const adminUser = {
+                id: Date.now(),
+                name: "LankaExplore Admin",
+                email: email,
+                role: "admin",
+                createdAt:
+                    new Date().toISOString()
+            };
+
+            saveUser(adminUser);
+
+            message.textContent =
+                "Admin login successful.";
+
+            setTimeout(
+                function () {
+                    window.location.href =
+                        "admin.html";
+                },
+                300
+            );
+
+            return;
+        }
+
+
+        /* DEMO TRAVELER LOGIN */
+
+        if (password.length < 4) {
+
+            message.textContent =
+                "Password must contain at least 4 characters.";
+
+            return;
+        }
+
+
+        const traveler = {
+            id: Date.now(),
+            name:
+                email
+                    .split("@")[0]
+                    .replace(/[._-]/g, " "),
+            email: email,
+            role: "traveler",
+            createdAt:
+                new Date().toISOString()
+        };
+
+        saveUser(traveler);
+
+        message.textContent =
+            "Login successful. Welcome to LankaExplore!";
+
+        setTimeout(
+            function () {
+                window.location.href =
+                    "index.html";
+            },
+            500
+        );
+
+    }
+);
+</script>
+
+</body>
+</html>

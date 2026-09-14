@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Destination | LankaExplore</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<header class="navbar">
+  <div class="logo">Lanka<span>Explore</span></div>
+  <nav id="navMenu"><a href="index.html#home">Home</a><a href="index.html#destinations">Destinations</a><a href="index.html#tours">Tours</a><a href="index.html#hotels">Hotels</a><a href="index.html#gallery">Gallery</a><a href="index.html#contact">Contact</a><a href="login.html">Login</a></nav>
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+</header>
+<main class="section" style="padding-top:150px;min-height:75vh">
+  <div class="section-title"><p>TRAVEL GUIDE</p><h2>Choose a Destination</h2></div>
+  <div class="destination-grid">
+    <div class="destination-card"><div class="destination-image sigiriya"></div><div class="destination-info"><h3>Sigiriya</h3><p>Ancient Rock Fortress</p><button onclick="showDestination('Sigiriya')">Explore</button></div></div>
+    <div class="destination-card"><div class="destination-image ella"></div><div class="destination-info"><h3>Ella</h3><p>Misty Mountain Escape</p><button onclick="showDestination('Ella')">Explore</button></div></div>
+    <div class="destination-card"><div class="destination-image galle"></div><div class="destination-info"><h3>Galle</h3><p>Historic Coastal City</p><button onclick="showDestination('Galle')">Explore</button></div></div>
+    <div class="destination-card"><div class="destination-image yala"></div><div class="destination-info"><h3>Yala</h3><p>Wildlife Adventure</p><button onclick="showDestination('Yala')">Explore</button></div></div>
+    <div class="destination-card"><div class="destination-image mirissa"></div><div class="destination-info"><h3>Mirissa</h3><p>Tropical Beach Paradise</p><button onclick="showDestination('Mirissa')">Explore</button></div></div>
+    <div class="destination-card"><div class="destination-image nuwara"></div><div class="destination-info"><h3>Nuwara Eliya</h3><p>Little England</p><button onclick="showDestination('Nuwara Eliya')">Explore</button></div></div>
+  </div>
+</main>
+<footer id="contact"><h2>Lanka<span>Explore</span></h2><p>Discover the Pearl of the Indian Ocean.</p><p class="copyright">© 2026 LankaExplore. All Rights Reserved.</p></footer>
+<script src="script.js"></script>
+</body>
+</html>
